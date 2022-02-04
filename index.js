@@ -25,6 +25,6 @@ app.post("/repo", jsonParser, (req, res)=> {
 });
 
 
-
+octokit.request(`/users/stalk94`).then(console.log)
 app.use('/', express.static(path.join(__dirname, '/dist')));
 app.listen(3000, ()=> console.log("listens http://localhost:3000"))

@@ -85,7 +85,7 @@ export function SecondList({login}) {
                     body={(rowData)=> (
                         <div style={{display:"flex",flexDirection:"column",fontSize:"14px"}}>
                             <var>{ rowData.forks } Forks</var>
-                            <var>{ rowData.stars } Stars</var>
+                            <var>{ rowData.stargazers_count } Stars</var>
                         </div>
                     )}
                 />
