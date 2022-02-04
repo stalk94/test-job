@@ -1,0 +1,30 @@
+{
+  "name": "test-job",
+  "version": "1.0.0",
+  "description": "test job",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "vite src",
+    "build": "vite build src --outDir=../dist"
+  },
+  "keywords": [],
+  "author": "stalk9424",
+  "license": "ISC",
+  "dependencies": {
+    "@octokit/core": "^3.5.1",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^1.0.7",
+    "jsdom": "^19.0.0",
+    "rooks": "^5.10.0",
+    "primeicons": "^5.0.0",
+    "primereact": "^7.2.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-transition-group": "^4.4.2",
+    "vite": "^2.7.13"
+  }
+}
