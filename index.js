@@ -15,12 +15,14 @@ app.get("/", (req, res)=> {
 });
 app.post("/users", jsonParser, (req, res)=> {
 	if(req.body.name) octokit.request(`/users/${req.body.name}`, {per_page:100}).then((value)=> {
-		res.send(value.data)
+		if(value.status!==401) res.send(value.data);
+		else res.send({error: "Необходимо сгенерировать токен самостоятельно"});
 	});
 });
 app.post("/repo", jsonParser, (req, res)=> {
 	if(req.body.login) octokit.request(`/users/${req.body.login}/repos`).then((value)=> {
-		res.send(value.data)
+		if(value.status!==401) res.send(value.data);
+		else res.send({error: "Необходимо сгенерировать токен самостоятельно"});
 	});
 });
 

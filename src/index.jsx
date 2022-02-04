@@ -5,9 +5,11 @@ import React from "react";
 import { Splitter, SplitterPanel } from 'primereact/splitter';
 import { Button } from "primereact/button";
 import { InputText } from 'primereact/inputtext';
-import { FirstList, SecondList, UserTemplate } from "./fragment";
-import { send } from "./func";
+import { FirstList, SecondList, UserTemplate, ErrorMassage } from "./fragment";
+import { send, EVENT } from "./func";
 import ReactDOM from "react-dom";
+
+
 
 
 const FirstPanel =({useData})=> {
@@ -16,10 +18,11 @@ const FirstPanel =({useData})=> {
 
     const useSearch =()=> {
         send("users", {name:value}, "POST").then((responces)=> {
-            if(responces && responces.login && !users.find((user)=> user.login===responces.login && true)){
+            if(responces && !responces.error && responces.login && !users.find((user)=> user.login===responces.login && true)){
                 localStorage.setItem("users", JSON.stringify([...users, responces]));
                 setUsers([...users, responces]);
             }
+            else if(responces.error) EVENT.emit("error", responces.error);
         });
     }
     React.useEffect(()=> {
@@ -69,17 +72,23 @@ const SecondPanel =({userData})=> (
 
 
 const App =()=> {
+    const [error, setError] = React.useState();
     const [data, setData] = React.useState({});
 
+    React.useEffect(()=> EVENT.on("error", setError), [])
+
     return(
-        <Splitter style={{height:'100%'}}>
-            <SplitterPanel>
-                <FirstPanel useData={setData}/>
-            </SplitterPanel>
-            <SplitterPanel>
-                <SecondPanel userData={data} />
-            </SplitterPanel>
-        </Splitter>
+        <>
+            {error && <ErrorMassage txt={error} />}
+            <Splitter style={{height:'100%'}}>
+                <SplitterPanel>
+                    <FirstPanel useData={setData}/>
+                </SplitterPanel>
+                <SplitterPanel>
+                    <SecondPanel userData={data} />
+                </SplitterPanel>
+            </Splitter>
+        </>
     );
 }
 

@@ -1,12 +1,18 @@
 import React from "react";
-import { send } from "./func";
+import { send, EVENT } from "./func";
 import { InputText } from 'primereact/inputtext';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from "primereact/button";
 
 
-
+export function ErrorMassage({txt}) {
+    return(
+        <div style={{position:"fixed",top:"0px",left:"0px",width:"100%",height:"10%",backgroundColor:"#e75a5a80"}}>
+            { txt }
+        </div>
+    );
+}
 export function FirstList({users, useData}) {
     return(
         <div>
@@ -51,8 +57,11 @@ export function SecondList({login}) {
     }
     React.useEffect(()=> {
         send("repo", {login: login}, "POST").then((responces)=> {
-            useFiltre(responces);
-            setData(responces)
+            if(responces && !responces.error){
+                useFiltre(responces);
+                setData(responces);
+            }
+            else if(responces.error) EVENT.emit("error", responces.error);
         });
     }, [login]);
     
