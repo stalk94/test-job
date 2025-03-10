@@ -1,8 +1,8 @@
 # test-job
 
-Получение списка фильмов в тренде этого дня. 
-api: https://api.themoviedb.org
-
+Получение списка фильмов в тренде этого дня.  
+api: https://api.themoviedb.org  
+Пример можно посмотреть: https://monumental-banoffee-2077d0.netlify.app/  
 
 ## Стек технологий
 
