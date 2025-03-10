@@ -6,6 +6,20 @@ import Flag from './flag';
 import { useGetMovies, Movie } from "./api";
 
 
+const chekText =(text: string)=> {
+    if(text.length > 20) return(
+        <div className='marquee-container'>
+            <div className="marquee-text">
+                { text }
+            </div>
+        </div>
+    );
+    else return(
+        <React.Fragment>
+            { text }
+        </React.Fragment>
+    );
+}
 const MovieRating =({ rating }: { rating: number })=> {
     
     return (
@@ -36,6 +50,7 @@ const columns: GridColDef<Movie>[] = [
         field: "image", 
         headerName: "Постер", 
         align: 'center',
+        filterable: false,
         renderCell: (params)=> (
             <img 
                 src={params.value} 
@@ -62,7 +77,7 @@ const columns: GridColDef<Movie>[] = [
                     overflow: 'hidden',
                     textOverflow: 'ellipsis'
                 }}>
-                    { params.value }
+                    { chekText(params.value) }
                 </div>
             );
         }

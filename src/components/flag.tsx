@@ -1,6 +1,7 @@
 import React from 'react';
-const imgNot = 'https://static.thenounproject.com/png/3405765-200.png';
 
+
+const imgNot = 'https://static.thenounproject.com/png/3405765-200.png';
 const countryCodes = {
     "Russia": "RU",
     "Germany": "DE",

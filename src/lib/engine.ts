@@ -4,7 +4,6 @@ import EventEmiter from "./emiter";
 
 window.gurl = import.meta.env.DEV ? 'http://localhost:3000/' : document.baseURI;
 window.languages = ['GB', 'RU', 'CN', 'DE'];
-window.token = undefined;
 export const EVENT = new EventEmiter();
 
 
