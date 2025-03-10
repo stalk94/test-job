@@ -1,9 +1,10 @@
 import React from "react";
 
 
-const apiKey = '0728cfb7b9ceb8241d937de05e0cd620';
+const apiKey = '0728cfb7b9ceb8241d937de05e0cd620';          //! спрятать ключ в .env
 const API_URL = `https://api.themoviedb.org/3/trending/movie/day?api_key=${apiKey}&language=ru-RU`;
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w200";
+
 
 export type Movie = {
     id: number

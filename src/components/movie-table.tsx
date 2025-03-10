@@ -1,6 +1,7 @@
 import React from "react";
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { Dialog, DialogContent,  Rating, Box } from "@mui/material";
+import { Dialog, DialogContent, Rating, Box, Tooltip } from "@mui/material";
+import { useTheme } from '@mui/material/styles';
 import Flag from './flag';
 import { useGetMovies, Movie } from "./api";
 
@@ -48,19 +49,23 @@ const columns: GridColDef<Movie>[] = [
         field: "title", 
         headerName: "Название", 
         width: 200,
-        renderCell: (params) => (
-            <div style={{ 
-                fontFamily: 'Arial', 
-                fontSize: '14px', 
-                color: '#c9fb84', 
-                fontWeight: 'bold',
-                wordWrap: 'break-word',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis'
-            }}>
-                { params.value }
-            </div>
-        )
+        renderCell: (params)=> {
+            const theme = useTheme();
+
+            return(
+                <div style={{ 
+                    fontFamily: 'Arial', 
+                    fontSize: '14px', 
+                    color: theme.palette.mode==='dark'?'#c9fb84':'#44d917', 
+                    fontWeight: 'bold',
+                    wordWrap: 'break-word',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                }}>
+                    { params.value }
+                </div>
+            );
+        }
     },
     { 
         field: "release_date", 
@@ -110,36 +115,78 @@ const columns: GridColDef<Movie>[] = [
         field: "overview", 
         headerName: "Описание", 
         flex: 1,
-        align: 'center',
         renderCell: (params)=> {
+            const theme = useTheme();
+            if(params.value==='') params.value = 'нет описания';
+
             return (
-                <var style={{
-                    color: '#252423',
-                    wordWrap: 'break-word',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis'
-                }}>
-                    {params.value}
-                </var> 
+                <Tooltip title={params.value} arrow>
+                    <div style={{
+                        display: 'block',
+                        height: '100%',
+                        maxWidth: '95%',
+                        color: theme.palette.mode==='dark'?'#a09c9c':'#252423',
+                        wordWrap: 'break-word',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        fontStyle: 'italic',
+                        fontSize: '12px'
+                    }}>
+                        { params.value }
+                    </div> 
+                </Tooltip>
             );
         }
+    }
+];
+const sortingModelsDefault = [
+    {
+        field: 'title',
+        sort: 'asc'
+    },
+    {
+        field: 'release_date',
+        sort: 'desc'
+    },
+    {
+        field: 'original_language',
+        sort: 'asc'
     }
 ];
 
 
 export default function() {
     const { movies, loading } = useGetMovies();
-    const [sortingModel, setSortingModel] = React.useState([]);
+    const [sortingModel, setSortingModel] = React.useState([sortingModelsDefault[1]]);
     const [filterModel, setFilterModel] = React.useState({ items: [] });
     const [selectedImage, setSelectedImage] = React.useState<string|null>(null);
+
 
     const handleImageClick =(image: string)=> {
         setSelectedImage(image);
     }
     const handleSortingModelChange =(newSortingModel)=> {
-        console.log(newSortingModel);
+        //console.log(newSortingModel);
         setSortingModel(newSortingModel);
+        localStorage.setItem('sortingModel', JSON.stringify(newSortingModel));
     }
+    const handleFilterModelChange =(newFilterModel)=> {
+        //console.log(newFilterModel);
+        setFilterModel(newFilterModel);
+        localStorage.setItem('filterModel', JSON.stringify(newFilterModel));
+    }
+    React.useEffect(()=> {
+        const savedSorting = localStorage.getItem('sortingModel');
+        const savedFilterModel = localStorage.getItem('filterModel');
+
+        if(savedSorting) {
+            setSortingModel(JSON.parse(savedSorting));
+        }
+        if(savedFilterModel) {
+            setFilterModel(JSON.parse(savedFilterModel));
+          }
+    }, []);
 
     
     return(
@@ -150,19 +197,25 @@ export default function() {
             >
                 <DialogContent>
                     { selectedImage && 
-                        <img src={selectedImage} alt="Large" style={{ width: "100%" }} />
+                        <img 
+                            src={selectedImage} 
+                            alt="Large" 
+                            style={{ width: "100%" }} 
+                        />
                     }
                 </DialogContent>
             </Dialog>
            
             <DataGrid 
+                disableMultipleColumnsSorting={false}
                 loading={loading}
                 rows={movies.map((row)=> ({ ...row, handleImageClick }))}
                 columns={columns}
-                //sortModel={sortingModel}
-                //onSortModelChange={handleSortingModelChange}
-                //filterModel={filterModel}
-                //onFilterModelChange={(newFilterModel)=> setFilterModel(newFilterModel)}
+
+                sortModel={sortingModel}
+                onSortModelChange={handleSortingModelChange}
+                filterModel={filterModel}
+                onFilterModelChange={handleFilterModelChange}
 
                 getRowHeight={(params)=> {
                     const contentHeight = params.model?.title?.length * 2;

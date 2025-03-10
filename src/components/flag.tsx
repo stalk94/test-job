@@ -77,11 +77,13 @@ export default ({ code, size, margin }: {margin?:string, code:string, size?: {wi
     }
     
     return(
-        <img style={{
-            width: size?.width ?? "25px",
-            height: size?.height ?? "25px",
-            marginTop: margin ?? '4px'
-        }}
+        <img 
+            alt={`flag-${code}`} 
+            style={{
+                width: size?.width ?? "25px",
+                height: size?.height ?? "25px",
+                marginTop: margin ?? '4px'
+            }}
             src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${chek(code)}.svg`}
             onError={(e)=> e.target.src = imgNot}
         />
